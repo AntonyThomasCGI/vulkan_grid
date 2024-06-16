@@ -13,10 +13,11 @@ include_directories(
     external/glfw/include
 )
 
-file(GLOB SOURCES "src/*.cpp" "src/*.hpp" "src/*.c" "src/*.h" "src/**/*.cpp" "src/**/*.c" "src/**/*.hpp" "src/**/*.h")
 
-message(STATUS "Adding Source(s) to executable: ${SOURCES}")
+add_subdirectory(src/engine)
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} src/main.cpp)
 
-target_link_libraries(${PROJECT_NAME} glfw ${GLFW_LIBRARIES} Vulkan::Vulkan)
+target_link_libraries(${PROJECT_NAME} engine glfw ${GLFW_LIBRARIES} ${Vulkan_LIBRARY_DIR})
+
+target_include_directories(${PROJECT_NAME} PUBLIC engine ${Vulkan_INCLUDE_DIR})
