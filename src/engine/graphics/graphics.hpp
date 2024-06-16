@@ -15,7 +15,7 @@ struct VulkanGraphicsInfo {
 class VulkanGraphics {
 
 public:
-    VulkanGraphics(Window *window_);
+    VulkanGraphics(Window &window);
     ~VulkanGraphics();
 
     void setPhysicalDevice(PhysicalDevice physicalDevice);
@@ -23,6 +23,6 @@ public:
 private:
     std::unique_ptr<Instance> instance;
     std::unique_ptr<Surface> surface;
-    Window *window;
+    Window &window;
     PhysicalDevice physicalDevice;
 };

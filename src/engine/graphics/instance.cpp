@@ -1,7 +1,10 @@
 
-#include "instance.hpp"
-
+#include <iostream>
 #include <stdexcept>
+
+#include <vulkan/vk_enum_string_helper.h>
+
+#include "instance.hpp"
 
 
 const::std::vector<const char*> Instance::validationLayers = {
@@ -9,7 +12,7 @@ const::std::vector<const char*> Instance::validationLayers = {
 };
 
 
-Instance::Instance(Window *window)
+Instance::Instance(Window &window)
 {
 #ifdef NDEBUG
     enableValidationLayers = false;
@@ -23,13 +26,9 @@ Instance::Instance(Window *window)
 
 Instance::~Instance()
 {
+    vkDestroyInstance(instance, nullptr);
 }
 
-
-VkInstance Instance::getInstance()
-{
-    return instance;
-}
 
 
 bool Instance::checkValidationLayerSupport()
@@ -57,7 +56,7 @@ bool Instance::checkValidationLayerSupport()
 }
 
 
-void Instance::createInstance(Window *window)
+void Instance::createInstance(Window &window)
 {
     if (enableValidationLayers && !checkValidationLayerSupport()) {
         throw std::runtime_error("validation layers requested, but not available!");
@@ -75,7 +74,7 @@ void Instance::createInstance(Window *window)
     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     createInfo.pApplicationInfo = &appInfo;
 
-    auto [windowExtensionCount, windowExtensions] = window->getInstanceExtensions();
+    auto [windowExtensionCount, windowExtensions] = window.getInstanceExtensions();
     createInfo.enabledExtensionCount = windowExtensionCount;
     createInfo.ppEnabledExtensionNames = windowExtensions;
 
@@ -86,7 +85,8 @@ void Instance::createInstance(Window *window)
         createInfo.enabledLayerCount = 0;
     }
 
-    if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
+    if (VkResult result = vkCreateInstance(&createInfo, nullptr, &instance); result != VK_SUCCESS) {
+        std::cerr << string_VkResult(result) << std::endl;
         throw std::runtime_error("Failed to create instance!");
     }
 }

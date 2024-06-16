@@ -8,9 +8,10 @@
 class Surface {
 
 public:
-    Surface(Instance *instance, Window *window);
+    Surface(Instance &instance, Window &window);
     ~Surface();
 
 private:
+    Instance &instance;
     VkSurfaceKHR surface;
 };

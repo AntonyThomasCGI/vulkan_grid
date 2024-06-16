@@ -13,7 +13,11 @@ int main() {
 
     auto window = Window(WIDTH, HEIGHT);
 
-    VulkanGraphics graphics = VulkanGraphics(&window);
+    try {
+        VulkanGraphics graphics = VulkanGraphics(window);
+    } catch (std::exception& e) {
+        std::cerr << "ERROR: " << e.what() << std::endl;
+    }
 
     std::cout << "end" << std::endl;
 

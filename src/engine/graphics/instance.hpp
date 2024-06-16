@@ -10,17 +10,17 @@
 class Instance
 {
 public:
-    Instance(Window *window);
+    Instance(Window &window);
     ~Instance();
 
     static const::std::vector<const char*> validationLayers;
 
-    VkInstance getInstance();
+    const VkInstance &getInstance() const { return instance; }
 
 private:
     VkInstance instance;
     bool enableValidationLayers;
 
     bool checkValidationLayerSupport();
-    void createInstance(Window *window);
+    void createInstance(Window &window);
 };
