@@ -13,7 +13,8 @@ public:
     Instance(Window &window);
     ~Instance();
 
-    static const::std::vector<const char*> validationLayers;
+    static const std::vector<const char*> validationLayers;
+    static std::vector<const char*> instanceExtensions;
 
     const VkInstance &getInstance() const { return instance; }
 

@@ -7,8 +7,12 @@
 #include "instance.hpp"
 
 
-const::std::vector<const char*> Instance::validationLayers = {
+const std::vector<const char*> Instance::validationLayers = {
     "VK_LAYER_KHRONOS_validation"
+};
+
+std::vector<const char*> Instance::instanceExtensions = {
+    "VK_KHR_portability_enumeration"
 };
 
 
@@ -73,10 +77,14 @@ void Instance::createInstance(Window &window)
     VkInstanceCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     createInfo.pApplicationInfo = &appInfo;
+    createInfo.flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
 
     auto [windowExtensionCount, windowExtensions] = window.getInstanceExtensions();
-    createInfo.enabledExtensionCount = windowExtensionCount;
-    createInfo.ppEnabledExtensionNames = windowExtensions;
+    for (int i = 0; i < windowExtensionCount; i++) {
+        instanceExtensions.push_back(windowExtensions[i]);
+    }
+    createInfo.enabledExtensionCount = instanceExtensions.size();
+    createInfo.ppEnabledExtensionNames = instanceExtensions.data();
 
     if (enableValidationLayers) {
         createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
