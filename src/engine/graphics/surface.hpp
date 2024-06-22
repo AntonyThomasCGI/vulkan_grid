@@ -11,6 +11,8 @@ public:
     Surface(Instance &instance, Window &window);
     ~Surface();
 
+    const VkSurfaceKHR &getSurface() const { return surface; }
+
 private:
     Instance &instance;
     VkSurfaceKHR surface;

@@ -18,11 +18,9 @@ public:
     VulkanGraphics(Window &window);
     ~VulkanGraphics();
 
-    void setPhysicalDevice(PhysicalDevice physicalDevice);
-
 private:
+    Window &window;
     std::unique_ptr<Instance> instance;
     std::unique_ptr<Surface> surface;
-    Window &window;
-    PhysicalDevice physicalDevice;
+    std::unique_ptr<PhysicalDevice> physicalDevice;
 };
