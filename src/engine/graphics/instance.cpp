@@ -23,7 +23,6 @@ Instance::Instance(Window &window)
 #else
     enableValidationLayers = true;
 #endif
-
     createInstance(window);
 }
 

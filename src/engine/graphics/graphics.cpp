@@ -9,6 +9,7 @@ VulkanGraphics::VulkanGraphics(Window &window) : window(window)
     surface = std::make_unique<Surface>(*instance.get(), window);
     physicalDevice = std::make_unique<PhysicalDevice>(*instance.get(), *surface.get());
     physicalDevice.get()->pickPhysicalDevice();
+    device = std::make_unique<LogicalDevice>(*instance.get(), *surface.get(), *physicalDevice.get());
 }
 
 

@@ -1,27 +1,9 @@
 #pragma once
 
-#include <optional>
 #include <vector>
 
 #include "instance.hpp"
 #include "surface.hpp"
-
-
-struct QueueFamilyIndices {
-    std::optional<uint32_t> graphicsFamily;
-    std::optional<uint32_t> presentFamily;
-
-    bool isComplete() {
-        return graphicsFamily.has_value() && presentFamily.has_value();
-    }
-};
-
-
-struct SwapChainSupportDetails {
-    VkSurfaceCapabilitiesKHR capabilities;
-    std::vector<VkSurfaceFormatKHR> formats;
-    std::vector<VkPresentModeKHR> presentModes;
-};
 
 
 class PhysicalDevice {
@@ -32,8 +14,8 @@ public:
 
     static const std::vector<const char*> deviceExtensions;
 
-    QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
-    SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
+    const VkPhysicalDevice &getPhysicalDevice() const { return physicalDevice; }
+
     void pickPhysicalDevice();
 
 private:

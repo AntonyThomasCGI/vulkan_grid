@@ -10,6 +10,8 @@ add_library(${LIBRARY_NAME}
     graphics/graphics.hpp
     graphics/instance.cpp
     graphics/instance.hpp
+    graphics/logical_device.cpp
+    graphics/logical_device.hpp
     graphics/physical_device.cpp
     graphics/physical_device.hpp
     graphics/surface.cpp

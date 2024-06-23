@@ -18,9 +18,10 @@ public:
 
     const VkInstance &getInstance() const { return instance; }
 
+    bool enableValidationLayers;
+
 private:
     VkInstance instance;
-    bool enableValidationLayers;
 
     bool checkValidationLayerSupport();
     void createInstance(Window &window);

@@ -29,61 +29,6 @@ PhysicalDevice::~PhysicalDevice()
 }
 
 
-QueueFamilyIndices PhysicalDevice::findQueueFamilies(VkPhysicalDevice device) {
-    QueueFamilyIndices indicies;
-
-    uint32_t queueFamilyCount = 0;
-    vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
-
-    std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-    vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
-
-    int i = 0;
-    for (const auto& queueFamily : queueFamilies) {
-        // Does device support graphics rendering.
-        if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
-            indicies.graphicsFamily = i;
-        }
-        // Does the device support our window surface.
-        VkBool32 presentSupport = false;
-        vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface.getSurface(), &presentSupport);
-        if (presentSupport) {
-            indicies.presentFamily = i;
-        }
-
-        if (indicies.isComplete()) {
-            break;
-        }
-        i++;
-    }
-
-    return indicies;
-}
-
-
-SwapChainSupportDetails PhysicalDevice::querySwapChainSupport(VkPhysicalDevice device) {
-    SwapChainSupportDetails details;
-
-    auto vkSurface = surface.getSurface();
-
-    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, vkSurface, &details.capabilities);
-
-    uint32_t formatCount;
-    vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface.getSurface(), &formatCount, nullptr);
-    if (formatCount != 0) {
-        details.formats.resize(formatCount);
-        vkGetPhysicalDeviceSurfaceFormatsKHR(device, vkSurface, &formatCount, details.formats.data());
-    }
-
-    uint32_t presentModeCount;
-    vkGetPhysicalDeviceSurfacePresentModesKHR(device, vkSurface, &presentModeCount, nullptr);
-    if (presentModeCount != 0) {
-        details.presentModes.resize(presentModeCount);
-        vkGetPhysicalDeviceSurfacePresentModesKHR(device, vkSurface, &presentModeCount, details.presentModes.data());
-    }
-
-    return details;
-}
 
 
 void PhysicalDevice::pickPhysicalDevice() {
@@ -110,13 +55,13 @@ void PhysicalDevice::pickPhysicalDevice() {
 
 
 bool PhysicalDevice::isDeviceSuitable(VkPhysicalDevice device) {
-    QueueFamilyIndices indicies = findQueueFamilies(device);
+    QueueFamilyIndices indicies = surface.findQueueFamilies(device);
 
     bool extensionsSupported = checkDeviceExtensionSupport(device);
 
     bool swapChainAdequate = false;
     if (extensionsSupported) {
-        SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device);
+        SwapChainSupportDetails swapChainSupport = surface.querySwapChainSupport(device);
         swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
     }
 
