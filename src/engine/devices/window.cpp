@@ -44,3 +44,9 @@ void Window::createWindow(unsigned int width, unsigned int height)
     //glfwSetFramebufferSizeCallback(window, framebufferReszieCallback);
     //glfwSetKeyCallback(window, keyCallback);
 }
+
+
+void Window::getFramebufferSize(int &width, int &height)
+{
+    glfwGetFramebufferSize(window, &width, &height);
+}

@@ -14,8 +14,12 @@ add_library(${LIBRARY_NAME}
     graphics/logical_device.hpp
     graphics/physical_device.cpp
     graphics/physical_device.hpp
+    graphics/render_pass.cpp
+    graphics/render_pass.hpp
     graphics/surface.cpp
     graphics/surface.hpp
+    graphics/swap_chain.cpp
+    graphics/swap_chain.hpp
 )
 
 include_directories(

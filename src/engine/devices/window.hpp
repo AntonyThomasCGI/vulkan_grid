@@ -15,6 +15,8 @@ public:
 
     VkResult createSurface(VkInstance &instance, VkSurfaceKHR *surface);
 
+    void getFramebufferSize(int &width, int &height);
+
 private:
     GLFWwindow *window;
 
