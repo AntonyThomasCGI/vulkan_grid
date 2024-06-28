@@ -15,6 +15,7 @@ int main() {
 
     try {
         VulkanGraphics graphics = VulkanGraphics(window);
+        graphics.createAsset();
     } catch (std::exception& e) {
         std::cerr << "ERROR: " << e.what() << std::endl;
     }

@@ -20,9 +20,9 @@ SwapChain::~SwapChain()
 
 
 void SwapChain::cleanupSwapChain() {
-    //for (auto framebuffer : swapChainFramebuffers) {
-    //    vkDestroyFramebuffer(logicalDevice.getDevice(), framebuffer, nullptr);
-    //}
+    for (auto framebuffer : swapChainFramebuffers) {
+        vkDestroyFramebuffer(logicalDevice.getDevice(), framebuffer, nullptr);
+    }
 
     for (auto imageView : swapChainImageViews) {
         vkDestroyImageView(logicalDevice.getDevice(), imageView, nullptr);

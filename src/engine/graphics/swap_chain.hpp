@@ -15,14 +15,17 @@ public:
     ~SwapChain();
 
     void SwapChain::cleanupSwapChain();
+    void setRenderPass(VkRenderPass rp);
+    void createFramebuffers();
 
     const VkSwapchainKHR &getSwapChain() const { return swapChain; }
+
+    VkFormat swapChainImageFormat;
+    VkExtent2D swapChainExtent;
 
 private:
     VkSwapchainKHR swapChain;
     std::vector<VkImage> swapChainImages;
-    VkFormat swapChainImageFormat;
-    VkExtent2D swapChainExtent;
 
     Surface &surface;
     PhysicalDevice &physicalDevice;
@@ -33,11 +36,9 @@ private:
     std::vector<VkFramebuffer> swapChainFramebuffers;
 
     VkRenderPass renderPass = VK_NULL_HANDLE;
-    void setRenderPass(VkRenderPass rp);
 
     void createSwapChain();
     void createImageViews();
-    void createFramebuffers();
 
     VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
     VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);

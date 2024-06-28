@@ -6,6 +6,11 @@ add_library(${LIBRARY_NAME}
     engine.hpp
     devices/window.cpp
     devices/window.hpp
+    geometry/mesh.cpp
+    geometry/mesh.hpp
+    geometry/vertex.hpp
+    graphics/command_pool.cpp
+    graphics/command_pool.hpp
     graphics/graphics.cpp
     graphics/graphics.hpp
     graphics/instance.cpp
@@ -14,8 +19,12 @@ add_library(${LIBRARY_NAME}
     graphics/logical_device.hpp
     graphics/physical_device.cpp
     graphics/physical_device.hpp
+    graphics/pipeline.cpp
+    graphics/pipeline.hpp
     graphics/render_pass.cpp
     graphics/render_pass.hpp
+    graphics/shader.cpp
+    graphics/shader.hpp
     graphics/surface.cpp
     graphics/surface.hpp
     graphics/swap_chain.cpp
