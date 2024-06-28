@@ -4,7 +4,7 @@
 
 #include "command_pool.hpp"
 #include "devices/window.hpp"
-#include "geometry/common/square.hpp"
+#include "geometry/primitives/square.hpp"
 #include "instance.hpp"
 #include "logical_device.hpp"
 #include "physical_device.hpp"
