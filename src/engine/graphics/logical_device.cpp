@@ -12,6 +12,7 @@ LogicalDevice::LogicalDevice(Instance &instance, Surface &surface, PhysicalDevic
 
 LogicalDevice::~LogicalDevice()
 {
+
     vkDestroyDevice(device, nullptr);
 }
 
@@ -58,7 +59,7 @@ void LogicalDevice::createLogicalDevice() {
         throw std::runtime_error("failed to create logical device!");
     }
 
-    // TODO!
-    //vkGetDeviceQueue(device, indicies.graphicsFamily.value(), 0, &graphicsQueue);
-    //vkGetDeviceQueue(device, indicies.presentFamily.value(), 0, &presentQueue);
+    vkGetDeviceQueue(device, indicies.graphicsFamily.value(), 0, &graphicsQueue);
+    vkGetDeviceQueue(device, indicies.presentFamily.value(), 0, &presentQueue);
 }
+

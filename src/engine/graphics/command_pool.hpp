@@ -13,6 +13,11 @@ public:
     CommandPool(PhysicalDevice &physicalDevice, LogicalDevice &logicalDevice, Surface &surface);
     ~CommandPool();
 
+    VkCommandPool const getCommandPool() const { return commandPool; }
+
+    void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+    void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+
 private:
     VkCommandPool commandPool;
 

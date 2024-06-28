@@ -6,6 +6,7 @@ add_library(${LIBRARY_NAME}
     engine.hpp
     devices/window.cpp
     devices/window.hpp
+    geometry/common/square.hpp
     geometry/mesh.cpp
     geometry/mesh.hpp
     geometry/vertex.hpp

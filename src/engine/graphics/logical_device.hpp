@@ -5,13 +5,19 @@
 #include "surface.hpp"
 
 
+class CommandPool;
+
+
 class LogicalDevice
 {
 public:
     LogicalDevice(Instance &instance, Surface &surface, PhysicalDevice &physicalDevice);
     ~LogicalDevice();
 
-    const VkDevice &getDevice() const { return device; }
+    VkDevice &getDevice() { return device; }
+    VkQueue &getGraphicsQueue() { return graphicsQueue; }
+    VkQueue &getPresentQueue() { return presentQueue; }
+    PhysicalDevice &getPhysicalDevice() { return physicalDevice; }
 
 private:
     VkDevice device;
@@ -19,5 +25,8 @@ private:
     Surface &surface;
     PhysicalDevice &physicalDevice;
 
-    void LogicalDevice::createLogicalDevice();
+    VkQueue graphicsQueue;
+    VkQueue presentQueue;
+
+    void createLogicalDevice();
 };

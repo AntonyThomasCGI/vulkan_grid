@@ -4,6 +4,7 @@
 
 #include "command_pool.hpp"
 #include "devices/window.hpp"
+#include "geometry/common/square.hpp"
 #include "instance.hpp"
 #include "logical_device.hpp"
 #include "physical_device.hpp"
@@ -34,5 +35,7 @@ private:
     std::unique_ptr<SwapChain> swapChain;
     std::unique_ptr<RenderPass> renderPass;
     std::unique_ptr<CommandPool> commandPool;
+
     std::unique_ptr<GraphicsPipeline> graphicsPipeline;
+    std::unique_ptr<Square> square;
 };

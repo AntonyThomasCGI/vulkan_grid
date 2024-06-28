@@ -15,6 +15,7 @@ public:
     static const std::vector<const char*> deviceExtensions;
 
     const VkPhysicalDevice &getPhysicalDevice() const { return physicalDevice; }
+    uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
     void pickPhysicalDevice();
 
@@ -25,4 +26,5 @@ private:
 
     bool isDeviceSuitable(VkPhysicalDevice device);
     bool checkDeviceExtensionSupport(VkPhysicalDevice device);
+
 };

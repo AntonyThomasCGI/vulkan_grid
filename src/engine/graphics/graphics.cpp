@@ -21,4 +21,7 @@ VulkanGraphics::VulkanGraphics(Window &window) : window(window)
 void VulkanGraphics::createAsset()
 {
     graphicsPipeline = std::make_unique<GraphicsPipeline>(*logicalDevice.get(), *swapChain.get(), *renderPass.get());
+
+    square = std::make_unique<Square>(logicalDevice.get());
+    square->createBuffers(*commandPool.get());
 }
