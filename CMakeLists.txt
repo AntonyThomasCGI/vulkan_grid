@@ -8,9 +8,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 find_package(Vulkan REQUIRED)
 
 add_subdirectory(external/glfw)
+add_subdirectory(external/rocket)
 
 include_directories(
     external/glfw/include
+    external/rocket
 )
 
 

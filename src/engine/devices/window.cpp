@@ -40,7 +40,8 @@ void Window::createWindow(unsigned int width, unsigned int height)
 
     window = glfwCreateWindow(width, height, "Vulkan Grid", nullptr, nullptr);
 
-    //glfwSetWindowUserPointer(window, this);
+    glfwSetWindowUserPointer(window, this);
+
     //glfwSetFramebufferSizeCallback(window, framebufferReszieCallback);
     //glfwSetKeyCallback(window, keyCallback);
 }
@@ -49,4 +50,26 @@ void Window::createWindow(unsigned int width, unsigned int height)
 void Window::getFramebufferSize(int &width, int &height)
 {
     glfwGetFramebufferSize(window, &width, &height);
+}
+
+
+void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
+    auto win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+    win->framebufferResized(width, height);
+}
+
+
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
+{
+    auto win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+    win->keyPressed(key, scancode, action, mode);
+}
+
+
+void Window::update()
+{
+    if (glfwWindowShouldClose(window)) {
+        shouldClose();
+    }
+    glfwPollEvents();
 }

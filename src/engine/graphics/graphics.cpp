@@ -1,4 +1,5 @@
 
+#include <iostream>
 #include <memory>
 
 #include "graphics.hpp"
@@ -24,4 +25,12 @@ void VulkanGraphics::createAsset()
 
     square = std::make_unique<Square>(logicalDevice.get());
     square->createBuffers(*commandPool.get());
+
+    commandBuffer = std::make_unique<CommandBuffer>(*logicalDevice.get(), *commandPool.get());
+}
+
+    
+void VulkanGraphics::update()
+{
+    // TODO
 }

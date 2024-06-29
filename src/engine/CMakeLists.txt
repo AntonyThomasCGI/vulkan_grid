@@ -3,6 +3,7 @@ set(LIBRARY_NAME engine)
 find_package(Vulkan REQUIRED)
 
 add_library(${LIBRARY_NAME}
+    engine.cpp
     engine.hpp
     devices/window.cpp
     devices/window.hpp
@@ -10,6 +11,8 @@ add_library(${LIBRARY_NAME}
     geometry/mesh.cpp
     geometry/mesh.hpp
     geometry/vertex.hpp
+    graphics/command_buffer.cpp
+    graphics/command_buffer.hpp
     graphics/command_pool.cpp
     graphics/command_pool.hpp
     graphics/graphics.cpp
@@ -34,6 +37,7 @@ add_library(${LIBRARY_NAME}
 
 include_directories(
     external/glfw/include
+    external/rocket
 )
 
 message(STATUS "vulkan include dir: ${Vulkan_INCLUDE_DIR}")

@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "command_buffer.hpp"
 #include "command_pool.hpp"
 #include "devices/window.hpp"
 #include "geometry/primitives/square.hpp"
@@ -14,17 +15,15 @@
 #include "swap_chain.hpp"
 
 
-struct VulkanGraphicsInfo {
-    Window *window;
-};
-
-
 class VulkanGraphics {
 
 public:
+    // TODO, graphics engine shouldn't require a window but oh well.
     VulkanGraphics(Window &window);
 
     void createAsset();
+
+    void update();
 
 private:
     Window &window;
@@ -38,4 +37,5 @@ private:
 
     std::unique_ptr<GraphicsPipeline> graphicsPipeline;
     std::unique_ptr<Square> square;
+    std::unique_ptr<CommandBuffer> commandBuffer;
 };
