@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "graphics/command_buffer.hpp"
 #include "graphics/command_pool.hpp"
 
 #include "vertex.hpp"
@@ -15,6 +16,7 @@ public:
     ~Mesh();
 
     void createBuffers(CommandPool &commandPool);
+    void draw(VkCommandBuffer &commandBuffer);
 
 private:
     LogicalDevice *logicalDevice;

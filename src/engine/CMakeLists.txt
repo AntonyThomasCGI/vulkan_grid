@@ -3,6 +3,8 @@ set(LIBRARY_NAME engine)
 find_package(Vulkan REQUIRED)
 
 add_library(${LIBRARY_NAME}
+    app.hpp
+    app.cpp
     engine.cpp
     engine.hpp
     devices/window.cpp

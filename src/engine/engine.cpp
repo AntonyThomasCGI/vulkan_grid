@@ -6,37 +6,17 @@
 #include "engine.hpp"
 
 
-const unsigned int WIDTH = 800;
-const unsigned int HEIGHT = 600;
-
-
-Engine::Engine()
+Engine::Engine(Window &window) : window(window)
 {
-    window = std::make_unique<Window>(WIDTH, HEIGHT);
-
-    connections += {
-        window->shouldClose.connect<&Engine::closeRequested>(this)
-    };
-
-    graphics = std::make_unique<VulkanGraphics>(*window.get());
+    graphics = std::make_unique<VulkanGraphics>(window);
     graphics->createAsset();
 }
 
 Engine::~Engine()
-{}
-
-
-void Engine::closeRequested()
 {
-    running = false;
 }
 
-
-
-void Engine::mainLoop()
+void Engine::update()
 {
-    while (running) {
-        window->update();
-        graphics->update();
-    }
+    graphics->update();
 }

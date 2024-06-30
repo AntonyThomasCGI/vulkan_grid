@@ -1,6 +1,6 @@
 #pragma once
 
-#define GLFW_INCLUDE_VULKAN
+#include <vulkan/vulkan.h>
 #include <GLFW/glfw3.h>
 #include <rocket.hpp>
 
@@ -30,4 +30,5 @@ private:
     void createWindow(unsigned int width, unsigned int height);
 
     friend void framebufferResizeCallback(GLFWwindow* window, int width, int height);
+    friend void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
 };

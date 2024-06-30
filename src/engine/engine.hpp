@@ -7,17 +7,14 @@
 class Engine
 {
 public:
-    Engine();
+    Engine(Window &window);
     ~Engine();
 
-    void mainLoop();
+    void update();
 
 private:
-    std::unique_ptr<Window> window;
+    Window &window;
     std::unique_ptr<VulkanGraphics> graphics;
-
-    void closeRequested();
-    bool running = true;
 
     rocket::scoped_connection_container connections;
 };

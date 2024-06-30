@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include "command_buffer.hpp"
 #include "command_pool.hpp"
@@ -37,5 +38,13 @@ private:
 
     std::unique_ptr<GraphicsPipeline> graphicsPipeline;
     std::unique_ptr<Square> square;
-    std::unique_ptr<CommandBuffer> commandBuffer;
+    std::vector<CommandBuffer> commandBuffers;
+
+    std::vector<VkSemaphore> imageAvailableSemaphores;
+    std::vector<VkSemaphore> renderFinishedSemaphores;
+    std::vector<VkFence> inFlightFences;
+
+    uint32_t currentFrame = 0;
+
+    void createSyncObjects();
 };

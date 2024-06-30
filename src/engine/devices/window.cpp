@@ -1,4 +1,6 @@
 
+#include <iostream>
+
 #include "window.hpp"
 
 
@@ -42,8 +44,8 @@ void Window::createWindow(unsigned int width, unsigned int height)
 
     glfwSetWindowUserPointer(window, this);
 
-    //glfwSetFramebufferSizeCallback(window, framebufferReszieCallback);
-    //glfwSetKeyCallback(window, keyCallback);
+    glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
+    glfwSetKeyCallback(window, keyCallback);
 }
 
 

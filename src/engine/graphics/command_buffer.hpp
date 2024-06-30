@@ -10,9 +10,11 @@ class CommandBuffer
 public:
     CommandBuffer(LogicalDevice &logicalDevice, CommandPool &commandPool);
 
-    //void start(...);
-    //void end();
-    //void submit(...);
+    void start();
+    void end();
+    void submit();
+
+    VkCommandBuffer &getCommandBuffer() { return commandBuffer; }
 
 private:
     VkCommandBuffer commandBuffer;

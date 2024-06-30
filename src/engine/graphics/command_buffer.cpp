@@ -16,3 +16,21 @@ CommandBuffer::CommandBuffer(LogicalDevice &logicalDevice, CommandPool &commandP
         throw std::runtime_error("failed to allocate command buffers!");
     }
 }
+
+
+void CommandBuffer::start()
+{
+    vkResetCommandBuffer(commandBuffer, 0);
+}
+
+
+void CommandBuffer::end()
+{
+
+}
+
+
+void CommandBuffer::submit()
+{
+
+}
