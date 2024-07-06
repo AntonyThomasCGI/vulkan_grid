@@ -46,4 +46,4 @@ message(STATUS "vulkan include dir: ${Vulkan_INCLUDE_DIR}")
 
 target_include_directories(${LIBRARY_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${Vulkan_INCLUDE_DIR})
 
-target_link_libraries(${LIBRARY_NAME} glfw ${GLFW_LIBRARIES} Vulkan::Vulkan)
+target_link_libraries(${LIBRARY_NAME} glfw glm ${GLFW_LIBRARIES} Vulkan::Vulkan)

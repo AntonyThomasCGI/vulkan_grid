@@ -3,6 +3,7 @@
 
 #include "command_buffer.hpp"
 
+CommandBuffer::CommandBuffer(){}
 
 CommandBuffer::CommandBuffer(LogicalDevice &logicalDevice, CommandPool &commandPool)
 {

@@ -40,8 +40,14 @@ static std::vector<char> readFile(const std::string& filename) {
 
 void GraphicsPipeline::createGraphicsPipeline() {
     //TODO, resource manager, shaders should be passed in to pipeline as args.
+# ifdef __APPLE__
+    auto vertShaderCode = readFile("/Users/antony/dev/vulkan_triangle/shaders/vert.spv");
+    auto fragShaderCode = readFile("/Users/antony/dev/vulkan_triangle/shaders/frag.spv");
+# else
     auto vertShaderCode = readFile("C:\\Users\\GGPC\\dev\\vulkan_triangle\\shaders\\vert.spv");
     auto fragShaderCode = readFile("C:\\Users\\GGPC\\dev\\vulkan_triangle\\shaders\\frag.spv");
+# endif
+
 
     VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
     VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);

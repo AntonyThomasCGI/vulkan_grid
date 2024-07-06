@@ -9,10 +9,12 @@ find_package(Vulkan REQUIRED)
 
 add_subdirectory(external/glfw)
 add_subdirectory(external/rocket)
+add_subdirectory(external/glm)
 
 include_directories(
     external/glfw/include
     external/rocket
+    external/glm
 )
 
 
@@ -20,6 +22,6 @@ add_subdirectory(src/engine)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
 
-target_link_libraries(${PROJECT_NAME} engine glfw ${GLFW_LIBRARIES} ${Vulkan_LIBRARY_DIR})
+target_link_libraries(${PROJECT_NAME} engine glfw glm ${GLFW_LIBRARIES} ${Vulkan_LIBRARY_DIR})
 
 target_include_directories(${PROJECT_NAME} PUBLIC engine ${Vulkan_INCLUDE_DIR})

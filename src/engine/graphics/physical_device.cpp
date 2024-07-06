@@ -9,7 +9,7 @@
 # ifdef __APPLE__
     const std::vector<const char*> PhysicalDevice::deviceExtensions = {
         VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-        "VK_KHR_portability_subset"
+        "VK_KHR_portability_subset",
     };
 #else
     const std::vector<const char*> PhysicalDevice::deviceExtensions = {

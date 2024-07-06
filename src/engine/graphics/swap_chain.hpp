@@ -14,7 +14,7 @@ public:
     SwapChain(Surface &surface, PhysicalDevice &physicalDevice, LogicalDevice &logicalDevice, Window &window);
     ~SwapChain();
 
-    void SwapChain::cleanupSwapChain();
+    void cleanupSwapChain();
     void setRenderPass(VkRenderPass rp);
     void createFramebuffers();
 

@@ -11,9 +11,16 @@ const std::vector<const char*> Instance::validationLayers = {
     "VK_LAYER_KHRONOS_validation"
 };
 
-std::vector<const char*> Instance::instanceExtensions = {
-    "VK_KHR_portability_enumeration"
-};
+# ifdef __APPLE__
+    std::vector<const char*> Instance::instanceExtensions = {
+        "VK_KHR_portability_enumeration",
+        "VK_KHR_get_physical_device_properties2"
+    };
+# else
+    std::vector<const char*> Instance::instanceExtensions = {
+        "VK_KHR_portability_enumeration"
+    };
+# endif
 
 
 Instance::Instance(Window &window)

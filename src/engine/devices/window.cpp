@@ -4,6 +4,20 @@
 #include "window.hpp"
 
 
+
+void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
+    auto win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+    win->framebufferResized(width, height);
+}
+
+
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
+{
+    auto win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+    win->keyPressed(key, scancode, action, mode);
+}
+
+
 Window::Window(unsigned int width, unsigned int height)
 {
     createWindow(width, height);
@@ -53,20 +67,6 @@ void Window::getFramebufferSize(int &width, int &height)
 {
     glfwGetFramebufferSize(window, &width, &height);
 }
-
-
-void framebufferResizeCallback(GLFWwindow* window, int width, int height) {
-    auto win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
-    win->framebufferResized(width, height);
-}
-
-
-void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
-{
-    auto win = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
-    win->keyPressed(key, scancode, action, mode);
-}
-
 
 void Window::update()
 {

@@ -8,6 +8,7 @@
 class CommandBuffer
 {
 public:
+    CommandBuffer();
     CommandBuffer(LogicalDevice &logicalDevice, CommandPool &commandPool);
 
     void start();
