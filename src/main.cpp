@@ -15,7 +15,7 @@ class App : public AppBase
 public:
     using AppBase::AppBase;
 
-    void update() {}
+    void update() { std::cout << "in main::App update" << std::endl; }
 
     void processInput(int key, int scancode, int action, int mode) {
         if (key == GLFW_KEY_ESCAPE) {

@@ -22,6 +22,11 @@ VulkanGraphics::VulkanGraphics(Window &window) : window(window)
     commandPool = std::make_unique<CommandPool>(*physicalDevice.get(), *logicalDevice.get(), *surface.get());
 }
 
+VulkanGraphics::~VulkanGraphics()
+{
+    cleanupSyncObjects();
+}
+
 
 void VulkanGraphics::createAsset()
 {
@@ -60,24 +65,34 @@ void VulkanGraphics::createSyncObjects() {
     }
 }
 
+
+void VulkanGraphics::cleanupSyncObjects() {
+    for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
+        vkDestroySemaphore(logicalDevice->getDevice(), imageAvailableSemaphores[i], nullptr);
+        vkDestroySemaphore(logicalDevice->getDevice(), renderFinishedSemaphores[i], nullptr);
+        vkDestroyFence(logicalDevice->getDevice(), inFlightFences[i], nullptr);
+    }
+}
+
     
 void VulkanGraphics::update()
 {
-    vkWaitForFences(logicalDevice->getDevice(), 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
+    std::cout << "graphics::update()" << std::endl;
+    //vkWaitForFences(logicalDevice->getDevice(), 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
-    uint32_t imageIndex;
-    VkResult result = vkAcquireNextImageKHR(logicalDevice->getDevice(), swapChain->getSwapChain(), UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
-    if (result != VK_SUCCESS) {
-        throw std::runtime_error("failed to acquire swap chain image!");
-    }
+    //uint32_t imageIndex;
+    //VkResult result = vkAcquireNextImageKHR(logicalDevice->getDevice(), swapChain->getSwapChain(), UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+    //if (result != VK_SUCCESS) {
+    //    throw std::runtime_error("failed to acquire swap chain image!");
+    //}
 
-    // Only reset the fence if we are submitting work.
-    vkResetFences(logicalDevice->getDevice(), 1, &inFlightFences[currentFrame]);
+    //// Only reset the fence if we are submitting work.
+    //vkResetFences(logicalDevice->getDevice(), 1, &inFlightFences[currentFrame]);
 
-    commandBuffers[currentFrame].start();
+    //commandBuffers[currentFrame].start();
 
-    square->draw(commandBuffers[currentFrame].getCommandBuffer());
+    //square->draw(commandBuffers[currentFrame].getCommandBuffer());
 
-    commandBuffers[currentFrame].end();
-    commandBuffers[currentFrame].submit();
+    //commandBuffers[currentFrame].end();
+    //commandBuffers[currentFrame].submit();
 }

@@ -21,6 +21,7 @@ class VulkanGraphics {
 public:
     // TODO, graphics engine shouldn't require a window but oh well.
     VulkanGraphics(Window &window);
+    ~VulkanGraphics();
 
     void createAsset();
 
@@ -47,4 +48,5 @@ private:
     uint32_t currentFrame = 0;
 
     void createSyncObjects();
+    void cleanupSyncObjects();
 };

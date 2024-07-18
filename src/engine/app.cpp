@@ -19,7 +19,7 @@ void AppBase::closeRequested()
 void AppBase::mainLoop()
 {
     while (running) {
-        //update();
+        update();
         window.update();
         engine.update();
     }

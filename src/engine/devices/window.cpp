@@ -70,6 +70,7 @@ void Window::getFramebufferSize(int &width, int &height)
 
 void Window::update()
 {
+    std::cout << "Window::update()" << std::endl;
     if (glfwWindowShouldClose(window)) {
         shouldClose();
     }
