@@ -20,6 +20,8 @@ public:
 
     const VkSwapchainKHR &getSwapChain() const { return swapChain; }
 
+    const VkFramebuffer &getFramebuffer(int index) const { return swapChainFramebuffers[index]; }
+
     VkFormat swapChainImageFormat;
     VkExtent2D swapChainExtent;
 

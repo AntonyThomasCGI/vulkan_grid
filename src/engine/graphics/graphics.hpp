@@ -39,7 +39,7 @@ private:
 
     std::unique_ptr<GraphicsPipeline> graphicsPipeline;
     std::unique_ptr<Square> square;
-    std::vector<CommandBuffer> commandBuffers;
+    std::vector<std::unique_ptr<CommandBuffer>> commandBuffers;
 
     std::vector<VkSemaphore> imageAvailableSemaphores;
     std::vector<VkSemaphore> renderFinishedSemaphores;

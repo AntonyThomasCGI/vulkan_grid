@@ -3,9 +3,7 @@
 
 #include "command_buffer.hpp"
 
-CommandBuffer::CommandBuffer(){}
-
-CommandBuffer::CommandBuffer(LogicalDevice &logicalDevice, CommandPool &commandPool)
+CommandBuffer::CommandBuffer(LogicalDevice &logicalDevice, CommandPool &commandPool) : logicalDevice(logicalDevice)
 {
     VkCommandBufferAllocateInfo allocInfo{};
     allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -22,16 +20,46 @@ CommandBuffer::CommandBuffer(LogicalDevice &logicalDevice, CommandPool &commandP
 void CommandBuffer::start()
 {
     vkResetCommandBuffer(commandBuffer, 0);
+
+    // Maybe move the below code...
+    // This used to be part of "record command buffer" which would be in the draw cmd ??
+
+    VkCommandBufferBeginInfo beginInfo{};
+    beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+    if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
+        throw std::runtime_error("failed to begin recording command buffer!");
+    }
 }
 
 
 void CommandBuffer::end()
 {
-
+    if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
+        throw std::runtime_error("failed to record command buffer!");
+    }
 }
 
 
-void CommandBuffer::submit()
+void CommandBuffer::submit(VkSemaphore &waitSemaphore, VkSemaphore &finishedSemaphore, VkFence fence)
 {
+    VkSubmitInfo submitInfo{};
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
+    VkSemaphore waitSemaphores[] = {waitSemaphore};
+    VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+    submitInfo.waitSemaphoreCount = 1;
+    submitInfo.pWaitSemaphores = waitSemaphores;
+    submitInfo.pWaitDstStageMask = waitStages;
+
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &commandBuffer;
+
+    VkSemaphore signalSemaphores[] = {finishedSemaphore};
+    submitInfo.signalSemaphoreCount = 1;
+    submitInfo.pSignalSemaphores = signalSemaphores;
+
+    if (vkQueueSubmit(logicalDevice.getGraphicsQueue(), 1, &submitInfo, fence) != VK_SUCCESS) {
+        throw std::runtime_error("failed to submit draw command buffer!");
+    }
 }

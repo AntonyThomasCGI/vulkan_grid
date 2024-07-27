@@ -11,6 +11,8 @@ public:
     GraphicsPipeline(LogicalDevice &logicalDevice, SwapChain &swapChain, RenderPass &renderPass);
     ~GraphicsPipeline();
 
+    VkPipeline getGraphicsPipeline() const { return graphicsPipeline; }
+
 private:
     VkPipeline graphicsPipeline;
     VkPipelineLayout pipelineLayout;

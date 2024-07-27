@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vulkan/vulkan.h>
 
 #include "command_pool.hpp"
 #include "logical_device.hpp"
@@ -13,10 +14,11 @@ public:
 
     void start();
     void end();
-    void submit();
+    void submit(VkSemaphore &waitSemaphore, VkSemaphore &finishedSemaphore, VkFence fence);
 
     VkCommandBuffer &getCommandBuffer() { return commandBuffer; }
 
 private:
+    LogicalDevice &logicalDevice;
     VkCommandBuffer commandBuffer;
 };

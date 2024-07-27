@@ -86,7 +86,6 @@ void Mesh::createIndexBuffer(CommandPool &commandPool)
 
 void Mesh::draw(VkCommandBuffer &commandBuffer)
 {
-
 }
 
 
