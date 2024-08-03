@@ -8,7 +8,7 @@
 class GraphicsPipeline
 {
 public:
-    GraphicsPipeline(LogicalDevice &logicalDevice, SwapChain &swapChain, RenderPass &renderPass);
+    GraphicsPipeline(LogicalDevice &logicalDevice, SwapChain &swapChain);
     ~GraphicsPipeline();
 
     VkPipeline getGraphicsPipeline() const { return graphicsPipeline; }
@@ -19,7 +19,6 @@ private:
 
     LogicalDevice &logicalDevice;
     SwapChain &swapChain;
-    RenderPass &renderPass;
 
     void createGraphicsPipeline();
     VkShaderModule createShaderModule(const std::vector<char>& code);

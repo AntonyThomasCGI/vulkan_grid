@@ -1,10 +1,13 @@
 #pragma once
 
+#include <iostream>
+#include <memory>
 #include <vector>
 
 #include "devices/window.hpp"
 #include "logical_device.hpp"
 #include "physical_device.hpp"
+#include "render_pass.hpp"
 #include "surface.hpp"
 
 
@@ -15,18 +18,24 @@ public:
     ~SwapChain();
 
     void cleanupSwapChain();
-    void setRenderPass(VkRenderPass rp);
-    void createFramebuffers();
 
     const VkSwapchainKHR &getSwapChain() const { return swapChain; }
 
-    const VkFramebuffer &getFramebuffer(int index) const { return swapChainFramebuffers[index]; }
+    const VkRenderPass &getRenderPass() const { return renderPass->getRenderPass(); }
+
+    const VkFramebuffer &getCurrentFramebuffer() const { return swapChainFramebuffers[imageIndex]; }
+
+    const void setCurrentImageIndex(uint32_t &imageIdx) { imageIndex = imageIdx; }
 
     VkFormat swapChainImageFormat;
     VkExtent2D swapChainExtent;
 
 private:
     VkSwapchainKHR swapChain;
+    std::unique_ptr<RenderPass> renderPass;
+
+    uint32_t imageIndex = 0;
+
     std::vector<VkImage> swapChainImages;
 
     Surface &surface;
@@ -37,10 +46,9 @@ private:
     std::vector<VkImageView> swapChainImageViews;
     std::vector<VkFramebuffer> swapChainFramebuffers;
 
-    VkRenderPass renderPass = VK_NULL_HANDLE;
-
     void createSwapChain();
     void createImageViews();
+    void createFramebuffers();
 
     VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
     VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);

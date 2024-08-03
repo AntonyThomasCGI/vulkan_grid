@@ -4,6 +4,8 @@
 
 #include "graphics/command_buffer.hpp"
 #include "graphics/command_pool.hpp"
+#include "graphics/pipeline.hpp"
+#include "graphics/swap_chain.hpp"
 
 #include "vertex.hpp"
 
@@ -16,7 +18,7 @@ public:
     ~Mesh();
 
     void createBuffers(CommandPool &commandPool);
-    void draw(VkCommandBuffer &commandBuffer);
+    void draw(CommandBuffer &commandBuffer, SwapChain &swapChain, GraphicsPipeline &pipeline);
 
 private:
     LogicalDevice *logicalDevice;

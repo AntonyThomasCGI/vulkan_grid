@@ -1,22 +1,21 @@
 #pragma once
 
 #include "logical_device.hpp"
-#include "swap_chain.hpp"
 
 
 class RenderPass
 {
 public:
-    RenderPass(LogicalDevice &logicalDevice, SwapChain &swapChain);
+    RenderPass(LogicalDevice &logicalDevice, VkFormat &imageFormat);
     ~RenderPass();
 
     VkRenderPass const getRenderPass() const { return renderPass; }
 
 private:
     VkRenderPass renderPass;
+    VkFormat imageFormat;
 
     LogicalDevice &logicalDevice;
-    SwapChain &swapChain;
 
     void createRenderPass();
 };

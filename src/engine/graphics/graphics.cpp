@@ -18,9 +18,6 @@ VulkanGraphics::VulkanGraphics(Window &window) : window(window)
     physicalDevice->pickPhysicalDevice();
     logicalDevice = std::make_unique<LogicalDevice>(*instance.get(), *surface.get(), *physicalDevice.get());
     swapChain = std::make_unique<SwapChain>(*surface.get(), *physicalDevice.get(), *logicalDevice.get(), window);
-    renderPass = std::make_unique<RenderPass>(*logicalDevice.get(), *swapChain.get());
-    swapChain->setRenderPass(renderPass->getRenderPass());
-    swapChain->createFramebuffers();
     commandPool = std::make_unique<CommandPool>(*physicalDevice.get(), *logicalDevice.get(), *surface.get());
 }
 
@@ -32,7 +29,7 @@ VulkanGraphics::~VulkanGraphics()
 
 void VulkanGraphics::createAsset()
 {
-    graphicsPipeline = std::make_unique<GraphicsPipeline>(*logicalDevice.get(), *swapChain.get(), *renderPass.get());
+    graphicsPipeline = std::make_unique<GraphicsPipeline>(*logicalDevice.get(), *swapChain.get());
 
     square = std::make_unique<Square>(logicalDevice.get());
     square->createBuffers(*commandPool.get());
@@ -69,6 +66,7 @@ void VulkanGraphics::createSyncObjects() {
 
 
 void VulkanGraphics::cleanupSyncObjects() {
+    vkDeviceWaitIdle(logicalDevice->getDevice());
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
         vkDestroySemaphore(logicalDevice->getDevice(), imageAvailableSemaphores[i], nullptr);
         vkDestroySemaphore(logicalDevice->getDevice(), renderFinishedSemaphores[i], nullptr);
@@ -76,11 +74,10 @@ void VulkanGraphics::cleanupSyncObjects() {
     }
 }
 
-    
+
 void VulkanGraphics::update()
 {
     std::cout << "graphics::update()" << std::endl;
-    std::cout << "currentFrame " << currentFrame << std::endl;
     vkWaitForFences(logicalDevice->getDevice(), 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
     uint32_t imageIndex;
@@ -95,29 +92,14 @@ void VulkanGraphics::update()
         throw std::runtime_error("failed to acquire swap chain image!");
     }
 
-    //// Only reset the fence if we are submitting work.
+    swapChain->setCurrentImageIndex(imageIndex);
+
+    // Only reset the fence if we are submitting work.
     vkResetFences(logicalDevice->getDevice(), 1, &inFlightFences[currentFrame]);
 
     commandBuffers[currentFrame]->start();
 
-    square->draw(commandBuffers[currentFrame]->getCommandBuffer());
-
-    VkRenderPassBeginInfo renderPassInfo{};
-    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-    renderPassInfo.renderPass = renderPass->getRenderPass();
-    renderPassInfo.framebuffer = swapChain->getFramebuffer(imageIndex);
-    renderPassInfo.renderArea.offset = {0, 0};
-    renderPassInfo.renderArea.extent = swapChain->swapChainExtent;
-    
-    VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
-    renderPassInfo.clearValueCount = 1;
-    renderPassInfo.pClearValues = &clearColor;
-
-    vkCmdBeginRenderPass(commandBuffers[currentFrame]->getCommandBuffer(), &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-
-    vkCmdBindPipeline(commandBuffers[currentFrame]->getCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->getGraphicsPipeline());
-
-    vkCmdEndRenderPass(commandBuffers[currentFrame]->getCommandBuffer());
+    square->draw(*commandBuffers[currentFrame].get(), *swapChain.get(), *graphicsPipeline.get());
 
     commandBuffers[currentFrame]->end();
     commandBuffers[currentFrame]->submit(imageAvailableSemaphores[currentFrame], renderFinishedSemaphores[currentFrame], inFlightFences[currentFrame]);

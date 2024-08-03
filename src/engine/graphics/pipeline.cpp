@@ -5,8 +5,8 @@
 #include "geometry/vertex.hpp"
 
 
-GraphicsPipeline::GraphicsPipeline(LogicalDevice &logicalDevice, SwapChain &swapChain, RenderPass &renderPass)
-    : logicalDevice(logicalDevice), swapChain(swapChain), renderPass(renderPass)
+GraphicsPipeline::GraphicsPipeline(LogicalDevice &logicalDevice, SwapChain &swapChain)
+    : logicalDevice(logicalDevice), swapChain(swapChain)
 {
     createGraphicsPipeline();
 }
@@ -164,7 +164,7 @@ void GraphicsPipeline::createGraphicsPipeline() {
     pipelineLayoutInfo.pSetLayouts = nullptr; // Optional
     pipelineLayoutInfo.pushConstantRangeCount = 0; // Optional
     pipelineLayoutInfo.pPushConstantRanges = nullptr; // Optional
-    
+
     if (vkCreatePipelineLayout(logicalDevice.getDevice(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
         throw std::runtime_error("failed to create pipeline layout!");
     }
@@ -183,7 +183,7 @@ void GraphicsPipeline::createGraphicsPipeline() {
     pipelineInfo.pColorBlendState = &colorBlending;
     pipelineInfo.pDynamicState = &dynamicState;
     pipelineInfo.layout = pipelineLayout;
-    pipelineInfo.renderPass = renderPass.getRenderPass();
+    pipelineInfo.renderPass = swapChain.getRenderPass();
     pipelineInfo.subpass = 0;
     pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
     pipelineInfo.basePipelineIndex = -1; // Optional

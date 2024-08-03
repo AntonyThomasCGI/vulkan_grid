@@ -84,8 +84,46 @@ void Mesh::createIndexBuffer(CommandPool &commandPool)
 }
 
 
-void Mesh::draw(VkCommandBuffer &commandBuffer)
+void Mesh::draw(CommandBuffer &commandBuffer, SwapChain &swapChain, GraphicsPipeline &pipeline)
 {
+    VkRenderPassBeginInfo renderPassInfo{};
+    renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+    renderPassInfo.renderPass = swapChain.getRenderPass();
+    renderPassInfo.framebuffer = swapChain.getCurrentFramebuffer();
+    renderPassInfo.renderArea.offset = {0, 0};
+    renderPassInfo.renderArea.extent = swapChain.swapChainExtent;
+
+    VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
+    renderPassInfo.clearValueCount = 1;
+    renderPassInfo.pClearValues = &clearColor;
+
+    vkCmdBeginRenderPass(commandBuffer.getCommandBuffer(), &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+    vkCmdBindPipeline(commandBuffer.getCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.getGraphicsPipeline());
+
+
+    VkBuffer vertexBuffers[] = {vertexBuffer};
+    VkDeviceSize offsets[] = {0};
+    vkCmdBindVertexBuffers(commandBuffer.getCommandBuffer(), 0, 1, vertexBuffers, offsets);
+
+    vkCmdBindIndexBuffer(commandBuffer.getCommandBuffer(), indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+
+
+    VkViewport viewport{};
+    viewport.x = 0.0f;
+    viewport.y = 0.0f;
+    viewport.width = static_cast<float>(swapChain.swapChainExtent.width);
+    viewport.height = static_cast<float>(swapChain.swapChainExtent.height);
+    viewport.minDepth = 0.0f;
+    viewport.maxDepth = 1.0f;
+    vkCmdSetViewport(commandBuffer.getCommandBuffer(), 0, 1, &viewport);
+
+    VkRect2D scissor{};
+    scissor.offset = {0, 0};
+    scissor.extent = swapChain.swapChainExtent;
+    vkCmdSetScissor(commandBuffer.getCommandBuffer(), 0, 1, &scissor);
+
+    vkCmdDrawIndexed(commandBuffer.getCommandBuffer(), static_cast<uint32_t>(indicies.size()), 1, 0, 0, 0);
+
+    vkCmdEndRenderPass(commandBuffer.getCommandBuffer());
 }
-
-

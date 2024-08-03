@@ -34,7 +34,6 @@ private:
     std::unique_ptr<PhysicalDevice> physicalDevice;
     std::unique_ptr<LogicalDevice> logicalDevice;
     std::unique_ptr<SwapChain> swapChain;
-    std::unique_ptr<RenderPass> renderPass;
     std::unique_ptr<CommandPool> commandPool;
 
     std::unique_ptr<GraphicsPipeline> graphicsPipeline;

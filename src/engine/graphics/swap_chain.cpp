@@ -1,5 +1,6 @@
 
 #include <algorithm>
+#include <memory>
 #include <stdexcept>
 
 #include "swap_chain.hpp"
@@ -10,6 +11,8 @@ SwapChain::SwapChain(Surface &surface, PhysicalDevice &physicalDevice, LogicalDe
 {
     createSwapChain();
     createImageViews();
+    renderPass = std::make_unique<RenderPass>(logicalDevice, swapChainImageFormat);
+    createFramebuffers();
 }
 
 
@@ -49,6 +52,7 @@ void SwapChain::createSwapChain() {
     createInfo.surface = surface.getSurface();
     createInfo.minImageCount = imageCount;
     createInfo.imageFormat = surfaceFormat.format;
+    swapChainImageFormat = surfaceFormat.format;
     createInfo.imageColorSpace = surfaceFormat.colorSpace;
     createInfo.imageExtent = swapExtent;
     createInfo.imageArrayLayers = 1;
@@ -111,11 +115,6 @@ void SwapChain::createImageViews() {
 }
 
 
-void SwapChain::setRenderPass(VkRenderPass rp) {
-    renderPass = rp;
-}
-
-
 void SwapChain::createFramebuffers() {
     if (renderPass == VK_NULL_HANDLE) {
         std::runtime_error("render pass must be set before framebuffer creation!");
@@ -129,7 +128,7 @@ void SwapChain::createFramebuffers() {
 
         VkFramebufferCreateInfo framebufferInfo{};
         framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-        framebufferInfo.renderPass = renderPass;
+        framebufferInfo.renderPass = renderPass->getRenderPass();
         framebufferInfo.attachmentCount = 1;
         framebufferInfo.pAttachments = attachments;
         framebufferInfo.width = swapChainExtent.width;
