@@ -74,6 +74,26 @@ void VulkanGraphics::cleanupSyncObjects() {
     }
 }
 
+void VulkanGraphics::onResize() {
+    int width = 0, height = 0;
+    window.getFramebufferSize(width, height);
+    // If window is minimized, pause until it comes back.
+    while (width == 0 || height == 0) {
+        window.getFramebufferSize(width, height);
+        glfwWaitEvents();
+    }
+
+    vkDeviceWaitIdle(logicalDevice->getDevice());
+
+    cleanupSyncObjects();
+    swapChain->cleanupSwapChain();
+
+    swapChain->createSwapChain();
+    swapChain->createImageViews();
+    swapChain->createFramebuffers();
+    createSyncObjects();
+}
+
 
 void VulkanGraphics::update()
 {
@@ -82,12 +102,10 @@ void VulkanGraphics::update()
 
     uint32_t imageIndex;
     VkResult result = vkAcquireNextImageKHR(logicalDevice->getDevice(), swapChain->getSwapChain(), 5e+9, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
-    //if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
-    //    throw std::runtime_error();
-    //} else if (result != VK_SUCCESS) {
-    //    throw std::runtime_error("failed to acquire swap chain image!");
-    //}
-    if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+    if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
+        onResize();
+        return;
+    } else if (result != VK_SUCCESS) {
         std::cerr << string_VkResult(result) << std::endl;
         throw std::runtime_error("failed to acquire swap chain image!");
     }

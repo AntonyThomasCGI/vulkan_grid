@@ -48,4 +48,5 @@ private:
 
     void createSyncObjects();
     void cleanupSyncObjects();
+    void onResize();
 };
