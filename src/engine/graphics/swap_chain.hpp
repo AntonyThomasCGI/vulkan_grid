@@ -34,9 +34,10 @@ public:
     void createImageViews();
     void createFramebuffers();
 
+    std::unique_ptr<RenderPass> renderPass;
+
 private:
     VkSwapchainKHR swapChain;
-    std::unique_ptr<RenderPass> renderPass;
 
     uint32_t imageIndex = 0;
 

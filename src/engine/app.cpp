@@ -4,13 +4,13 @@
 AppBase::AppBase(Window &window, Engine &engine) : window(window), engine(engine)
 {
     connections += {
-        window.shouldClose.connect<&AppBase::closeRequested>(this),
+        window.shouldClose.connect<&AppBase::exitApp>(this),
         window.keyPressed.connect<&AppBase::processInput>(this)
     };
 }
 
 
-void AppBase::closeRequested()
+void AppBase::exitApp()
 {
     running = false;
 }

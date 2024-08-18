@@ -6,7 +6,7 @@
 #include "command_buffer.hpp"
 #include "command_pool.hpp"
 #include "devices/window.hpp"
-#include "geometry/primitives/square.hpp"
+#include "geometry/shapes/square.hpp"
 #include "instance.hpp"
 #include "logical_device.hpp"
 #include "physical_device.hpp"
@@ -46,6 +46,21 @@ private:
 
     uint32_t currentFrame = 0;
 
+    VkDescriptorSetLayout descriptorSetLayout;
+    VkPipelineLayout pipelineLayout;
+
+    std::vector<VkBuffer> uniformBuffers;
+    std::vector<VkDeviceMemory> uniformBuffersMemory;
+    std::vector<void*> uniformBuffersMapped;
+
+    VkDescriptorPool descriptorPool;
+    std::vector<VkDescriptorSet> descriptorSets;
+
+    void createDescriptorSets();
+    void createDescriptorPool();
+    void createUniformBuffers();
+    void createDescriptorSetLayout();
+    void updateUniformBuffer(uint32_t currentFrame);
     void createSyncObjects();
     void cleanupSyncObjects();
     void onResize();

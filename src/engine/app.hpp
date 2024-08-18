@@ -13,13 +13,14 @@ public:
     virtual void update() = 0;
 
     void mainLoop();
-    bool running = true;
+
+    void exitApp();
 
 private:
     Window &window;
     Engine &engine;
 
-    void closeRequested();
+    bool running = true;
 
     rocket::scoped_connection_container connections;
 };

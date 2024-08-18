@@ -7,19 +7,18 @@
 
 class GraphicsPipeline
 {
-public:
-    GraphicsPipeline(LogicalDevice &logicalDevice, SwapChain &swapChain);
+public: GraphicsPipeline(LogicalDevice &logicalDevice, SwapChain &swapChain, VkDescriptorSetLayout &descriptorSet);
     ~GraphicsPipeline();
 
     VkPipeline getGraphicsPipeline() const { return graphicsPipeline; }
+    VkPipelineLayout pipelineLayout;
 
 private:
     VkPipeline graphicsPipeline;
-    VkPipelineLayout pipelineLayout;
 
     LogicalDevice &logicalDevice;
     SwapChain &swapChain;
 
-    void createGraphicsPipeline();
+    void createGraphicsPipeline(VkDescriptorSetLayout &descriptorSet);
     VkShaderModule createShaderModule(const std::vector<char>& code);
 };

@@ -5,10 +5,10 @@
 #include "geometry/vertex.hpp"
 
 
-GraphicsPipeline::GraphicsPipeline(LogicalDevice &logicalDevice, SwapChain &swapChain)
+GraphicsPipeline::GraphicsPipeline(LogicalDevice &logicalDevice, SwapChain &swapChain, VkDescriptorSetLayout &descriptorSet)
     : logicalDevice(logicalDevice), swapChain(swapChain)
 {
-    createGraphicsPipeline();
+    createGraphicsPipeline(descriptorSet);
 }
 
 
@@ -38,14 +38,14 @@ static std::vector<char> readFile(const std::string& filename) {
 
 
 
-void GraphicsPipeline::createGraphicsPipeline() {
+void GraphicsPipeline::createGraphicsPipeline(VkDescriptorSetLayout &descriptorSet) {
     //TODO, resource manager, shaders should be passed in to pipeline as args.
-# ifdef __APPLE__
-    auto vertShaderCode = readFile("/Users/antony/dev/vulkan_triangle/shaders/vert.spv");
-    auto fragShaderCode = readFile("/Users/antony/dev/vulkan_triangle/shaders/frag.spv");
+# ifdef /* bad */ __APPLE__
+    auto vertShaderCode = readFile("/Users/antony/dev/vulkan_grid/shaders/flat_vert.spv");
+    auto fragShaderCode = readFile("/Users/antony/dev/vulkan_grid/shaders/flat_frag.spv");
 # else
-    auto vertShaderCode = readFile("C:\\Users\\GGPC\\dev\\vulkan_triangle\\shaders\\vert.spv");
-    auto fragShaderCode = readFile("C:\\Users\\GGPC\\dev\\vulkan_triangle\\shaders\\frag.spv");
+    auto vertShaderCode = readFile("C:\\Users\\GGPC\\dev\\vulkan_grid\\shaders\\flat_vert.spv");
+    auto fragShaderCode = readFile("C:\\Users\\GGPC\\dev\\vulkan_grid\\shaders\\flat_frag.spv");
 # endif
 
 
@@ -115,7 +115,7 @@ void GraphicsPipeline::createGraphicsPipeline() {
     rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
     rasterizer.lineWidth = 1.0f;
     rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-    rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+    rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
     rasterizer.depthBiasEnable = VK_FALSE;
     rasterizer.depthBiasConstantFactor = 0.0f; // Optional
     rasterizer.depthBiasClamp = 0.0f; // Optional
@@ -160,8 +160,8 @@ void GraphicsPipeline::createGraphicsPipeline() {
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    pipelineLayoutInfo.setLayoutCount = 0; // Optional
-    pipelineLayoutInfo.pSetLayouts = nullptr; // Optional
+    pipelineLayoutInfo.setLayoutCount = 1;
+    pipelineLayoutInfo.pSetLayouts = &descriptorSet;
     pipelineLayoutInfo.pushConstantRangeCount = 0; // Optional
     pipelineLayoutInfo.pPushConstantRanges = nullptr; // Optional
 
