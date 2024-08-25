@@ -84,7 +84,7 @@ void Mesh::createIndexBuffer(CommandPool &commandPool)
 }
 
 
-void Mesh::draw(CommandBuffer &commandBuffer, SwapChain &swapChain, GraphicsPipeline &pipeline)
+void Mesh::draw(CommandBuffer &commandBuffer, SwapChain &swapChain)
 {
     VkRenderPassBeginInfo renderPassInfo{};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -98,9 +98,6 @@ void Mesh::draw(CommandBuffer &commandBuffer, SwapChain &swapChain, GraphicsPipe
     renderPassInfo.pClearValues = &clearColor;
 
     vkCmdBeginRenderPass(commandBuffer.getCommandBuffer(), &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-
-    vkCmdBindPipeline(commandBuffer.getCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline.getGraphicsPipeline());
-
 
     VkBuffer vertexBuffers[] = {vertexBuffer};
     VkDeviceSize offsets[] = {0};

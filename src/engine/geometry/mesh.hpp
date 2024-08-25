@@ -18,7 +18,7 @@ public:
     ~Mesh();
 
     void createBuffers(CommandPool &commandPool);
-    void draw(CommandBuffer &commandBuffer, SwapChain &swapChain, GraphicsPipeline &pipeline);
+    void draw(CommandBuffer &commandBuffer, SwapChain &swapChain);
 
 private:
     LogicalDevice *logicalDevice;

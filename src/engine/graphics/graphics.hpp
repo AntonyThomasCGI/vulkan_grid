@@ -12,6 +12,7 @@
 #include "physical_device.hpp"
 #include "pipeline.hpp"
 #include "render_pass.hpp"
+#include "shader.hpp"
 #include "surface.hpp"
 #include "swap_chain.hpp"
 
@@ -36,8 +37,8 @@ private:
     std::unique_ptr<SwapChain> swapChain;
     std::unique_ptr<CommandPool> commandPool;
 
-    std::unique_ptr<GraphicsPipeline> graphicsPipeline;
     std::unique_ptr<Square> square;
+    std::unique_ptr<Shader> shader;
     std::vector<std::unique_ptr<CommandBuffer>> commandBuffers;
 
     std::vector<VkSemaphore> imageAvailableSemaphores;
@@ -46,21 +47,6 @@ private:
 
     uint32_t currentFrame = 0;
 
-    VkDescriptorSetLayout descriptorSetLayout;
-    VkPipelineLayout pipelineLayout;
-
-    std::vector<VkBuffer> uniformBuffers;
-    std::vector<VkDeviceMemory> uniformBuffersMemory;
-    std::vector<void*> uniformBuffersMapped;
-
-    VkDescriptorPool descriptorPool;
-    std::vector<VkDescriptorSet> descriptorSets;
-
-    void createDescriptorSets();
-    void createDescriptorPool();
-    void createUniformBuffers();
-    void createDescriptorSetLayout();
-    void updateUniformBuffer(uint32_t currentFrame);
     void createSyncObjects();
     void cleanupSyncObjects();
     void onResize();

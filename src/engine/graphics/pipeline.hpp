@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vulkan/vulkan.h>
+
 #include "logical_device.hpp"
 #include "render_pass.hpp"
 #include "swap_chain.hpp"
@@ -7,7 +9,7 @@
 
 class GraphicsPipeline
 {
-public: GraphicsPipeline(LogicalDevice &logicalDevice, SwapChain &swapChain, VkDescriptorSetLayout &descriptorSet);
+public: GraphicsPipeline(LogicalDevice &logicalDevice, SwapChain &swapChain, VkDescriptorSetLayout &descriptorSet, VkShaderModule vertShaderModule, VkShaderModule fragShaderModule);
     ~GraphicsPipeline();
 
     VkPipeline getGraphicsPipeline() const { return graphicsPipeline; }
@@ -15,10 +17,7 @@ public: GraphicsPipeline(LogicalDevice &logicalDevice, SwapChain &swapChain, VkD
 
 private:
     VkPipeline graphicsPipeline;
+    LogicalDevice logicalDevice;
 
-    LogicalDevice &logicalDevice;
-    SwapChain &swapChain;
-
-    void createGraphicsPipeline(VkDescriptorSetLayout &descriptorSet);
-    VkShaderModule createShaderModule(const std::vector<char>& code);
+    void createGraphicsPipeline(SwapChain &swapChain, VkDescriptorSetLayout &descriptorSet, VkShaderModule vertShaderModule, VkShaderModule fragShaderModule);
 };

@@ -3,20 +3,21 @@ set(LIBRARY_NAME engine)
 find_package(Vulkan REQUIRED)
 
 add_library(${LIBRARY_NAME}
-    app.hpp
     app.cpp
-    engine.cpp
-    engine.hpp
+    app.hpp
     devices/window.cpp
     devices/window.hpp
-    geometry/shapes/square.hpp
+    engine.cpp
+    engine.hpp
     geometry/mesh.cpp
     geometry/mesh.hpp
+    geometry/shapes/square.hpp
     geometry/vertex.hpp
     graphics/command_buffer.cpp
     graphics/command_buffer.hpp
     graphics/command_pool.cpp
     graphics/command_pool.hpp
+    graphics/constants.hpp
     graphics/graphics.cpp
     graphics/graphics.hpp
     graphics/instance.cpp
@@ -35,6 +36,8 @@ add_library(${LIBRARY_NAME}
     graphics/surface.hpp
     graphics/swap_chain.cpp
     graphics/swap_chain.hpp
+    renderers/sprite_renderer.cpp
+    renderers/sprite_renderer.hpp
 )
 
 include_directories(

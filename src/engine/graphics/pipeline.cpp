@@ -1,14 +1,12 @@
 
-#include <fstream>
-
 #include "pipeline.hpp"
 #include "geometry/vertex.hpp"
 
 
-GraphicsPipeline::GraphicsPipeline(LogicalDevice &logicalDevice, SwapChain &swapChain, VkDescriptorSetLayout &descriptorSet)
-    : logicalDevice(logicalDevice), swapChain(swapChain)
+GraphicsPipeline::GraphicsPipeline(LogicalDevice &logicalDevice, SwapChain &swapChain, VkDescriptorSetLayout &descriptorSet, VkShaderModule vertShaderModule, VkShaderModule fragShaderModule)
+    : logicalDevice(logicalDevice)
 {
-    createGraphicsPipeline(descriptorSet);
+    createGraphicsPipeline(swapChain, descriptorSet, vertShaderModule, fragShaderModule);
 }
 
 
@@ -19,39 +17,8 @@ GraphicsPipeline::~GraphicsPipeline()
 }
 
 
-static std::vector<char> readFile(const std::string& filename) {
-    std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
-    if (!file.is_open()) {
-        throw std::runtime_error("failed to open file");
-    }
-
-    size_t fileSize = (size_t) file.tellg();
-    std::vector<char> buffer(fileSize);
-
-    file.seekg(0);
-    file.read(buffer.data(), fileSize);
-    file.close();
-
-    return buffer;
-}
-
-
-
-void GraphicsPipeline::createGraphicsPipeline(VkDescriptorSetLayout &descriptorSet) {
-    //TODO, resource manager, shaders should be passed in to pipeline as args.
-# ifdef /* bad */ __APPLE__
-    auto vertShaderCode = readFile("/Users/antony/dev/vulkan_grid/shaders/flat_vert.spv");
-    auto fragShaderCode = readFile("/Users/antony/dev/vulkan_grid/shaders/flat_frag.spv");
-# else
-    auto vertShaderCode = readFile("C:\\Users\\GGPC\\dev\\vulkan_grid\\shaders\\flat_vert.spv");
-    auto fragShaderCode = readFile("C:\\Users\\GGPC\\dev\\vulkan_grid\\shaders\\flat_frag.spv");
-# endif
-
-
-    VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
-    VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
-
+void GraphicsPipeline::createGraphicsPipeline(SwapChain &swapChain, VkDescriptorSetLayout &descriptorSet, VkShaderModule vertShaderModule, VkShaderModule fragShaderModule) {
     VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
     vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
@@ -116,6 +83,7 @@ void GraphicsPipeline::createGraphicsPipeline(VkDescriptorSetLayout &descriptorS
     rasterizer.lineWidth = 1.0f;
     rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
     rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+    //rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
     rasterizer.depthBiasEnable = VK_FALSE;
     rasterizer.depthBiasConstantFactor = 0.0f; // Optional
     rasterizer.depthBiasClamp = 0.0f; // Optional
@@ -191,22 +159,5 @@ void GraphicsPipeline::createGraphicsPipeline(VkDescriptorSetLayout &descriptorS
     if (vkCreateGraphicsPipelines(logicalDevice.getDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
         throw std::runtime_error("failed to create graphics pipeline!");
     }
-
-    vkDestroyShaderModule(logicalDevice.getDevice(), vertShaderModule, nullptr);
-    vkDestroyShaderModule(logicalDevice.getDevice(), fragShaderModule, nullptr);
 }
 
-
-VkShaderModule GraphicsPipeline::createShaderModule(const std::vector<char>& code) {
-    VkShaderModuleCreateInfo createInfo{};
-    createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-    createInfo.codeSize = code.size();
-    createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
-
-    VkShaderModule shaderModule;
-    if (vkCreateShaderModule(logicalDevice.getDevice(), &createInfo, nullptr, &shaderModule) != VK_SUCCESS) {
-        throw std::runtime_error("failed to create shader module!");
-    }
-
-    return shaderModule;
-}
