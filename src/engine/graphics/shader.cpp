@@ -36,8 +36,8 @@ static std::vector<char> readFile(const std::string& filename) {
 }
 
 
-Shader::Shader(LogicalDevice &logicalDevice, CommandPool &commandPool, SwapChain &swapChain, std::string vertShader, std::string fragShader)
-    : logicalDevice(logicalDevice), commandPool(commandPool)
+Shader::Shader(VkDevice &device, CommandPool &commandPool, SwapChain &swapChain, std::string vertShader, std::string fragShader)
+    : device(device)
 {
     createDescriptorSetLayout();
 
@@ -47,12 +47,12 @@ Shader::Shader(LogicalDevice &logicalDevice, CommandPool &commandPool, SwapChain
     VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
     VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
 
-    graphicsPipeline = std::make_unique<GraphicsPipeline>(logicalDevice, swapChain, descriptorSetLayout, vertShaderModule, fragShaderModule);
+    graphicsPipeline = std::make_unique<GraphicsPipeline>(device, swapChain, descriptorSetLayout, vertShaderModule, fragShaderModule);
 
-    vkDestroyShaderModule(logicalDevice.getDevice(), vertShaderModule, nullptr);
-    vkDestroyShaderModule(logicalDevice.getDevice(), fragShaderModule, nullptr);
+    vkDestroyShaderModule(device, vertShaderModule, nullptr);
+    vkDestroyShaderModule(device, fragShaderModule, nullptr);
 
-    createUniformBuffers();
+    createUniformBuffers(commandPool);
     createDescriptorPool();
     createDescriptorSets();
 }
@@ -60,11 +60,11 @@ Shader::Shader(LogicalDevice &logicalDevice, CommandPool &commandPool, SwapChain
 Shader::~Shader()
 {
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-        vkDestroyBuffer(logicalDevice.getDevice(), uniformBuffers[i], nullptr);
-        vkFreeMemory(logicalDevice.getDevice(), uniformBuffersMemory[i], nullptr);
+        vkDestroyBuffer(device, uniformBuffers[i], nullptr);
+        vkFreeMemory(device, uniformBuffersMemory[i], nullptr);
     }
-    vkDestroyDescriptorPool(logicalDevice.getDevice(), descriptorPool, nullptr);
-    vkDestroyDescriptorSetLayout(logicalDevice.getDevice(), descriptorSetLayout, nullptr);
+    vkDestroyDescriptorPool(device, descriptorPool, nullptr);
+    vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
 }
 
 
@@ -133,7 +133,7 @@ void Shader::createDescriptorSets()
     allocInfo.pSetLayouts = layouts.data();
 
     descriptorSets.resize(MAX_FRAMES_IN_FLIGHT);
-    if (vkAllocateDescriptorSets(logicalDevice.getDevice(), &allocInfo, descriptorSets.data()) != VK_SUCCESS) {
+    if (vkAllocateDescriptorSets(device, &allocInfo, descriptorSets.data()) != VK_SUCCESS) {
         throw std::runtime_error("failed to allocate descriptor sets!");
     }
 
@@ -155,7 +155,7 @@ void Shader::createDescriptorSets()
         descriptorWrite.pImageInfo = nullptr; // Optional
         descriptorWrite.pTexelBufferView = nullptr; // Optional
 
-        vkUpdateDescriptorSets(logicalDevice.getDevice(), 1, &descriptorWrite, 0, nullptr);
+        vkUpdateDescriptorSets(device, 1, &descriptorWrite, 0, nullptr);
     }
 }
 
@@ -173,13 +173,13 @@ void Shader::createDescriptorPool()
 
     poolInfo.maxSets = static_cast<uint32_t>(MAX_FRAMES_IN_FLIGHT);
 
-    if (vkCreateDescriptorPool(logicalDevice.getDevice(), &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
+    if (vkCreateDescriptorPool(device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
         throw std::runtime_error("failed to create descriptor pool!");
     }
 }
 
 
-void Shader::createUniformBuffers()
+void Shader::createUniformBuffers(CommandPool &commandPool)
 {
     VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
@@ -190,7 +190,7 @@ void Shader::createUniformBuffers()
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
         commandPool.createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, uniformBuffers[i], uniformBuffersMemory[i]);
 
-        vkMapMemory(logicalDevice.getDevice(), uniformBuffersMemory[i], 0, bufferSize, 0, &uniformBuffersMapped[i]);
+        vkMapMemory(device, uniformBuffersMemory[i], 0, bufferSize, 0, &uniformBuffersMapped[i]);
     }
 }
 
@@ -203,7 +203,7 @@ VkShaderModule Shader::createShaderModule(const std::vector<char>& code) {
     createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
 
     VkShaderModule shaderModule;
-    if (vkCreateShaderModule(logicalDevice.getDevice(), &createInfo, nullptr, &shaderModule) != VK_SUCCESS) {
+    if (vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule) != VK_SUCCESS) {
         throw std::runtime_error("failed to create shader module!");
     }
 
@@ -228,7 +228,7 @@ void Shader::createDescriptorSetLayout()
     layoutInfo.bindingCount = 1;
     layoutInfo.pBindings = &uboLayoutBinding;
 
-    if (vkCreateDescriptorSetLayout(logicalDevice.getDevice(), &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
+    if (vkCreateDescriptorSetLayout(device, &layoutInfo, nullptr, &descriptorSetLayout) != VK_SUCCESS) {
         throw std::runtime_error("failed to create descriptor set layout!");
     }
 }

@@ -40,7 +40,7 @@ void VulkanGraphics::createAsset()
     std::string fragPath = "C:\\Users\\GGPC\\dev\\vulkan_grid\\shaders\\flat_frag.spv";
 # endif
 
-    shader = std::make_unique<Shader>(*logicalDevice.get(), *commandPool.get(), *swapChain.get(), vertPath, fragPath);
+    shader = std::make_unique<Shader>(logicalDevice->getDevice(), *commandPool.get(), *swapChain.get(), vertPath, fragPath);
 
     square = std::make_unique<Square>(logicalDevice.get());
     square->createBuffers(*commandPool.get());

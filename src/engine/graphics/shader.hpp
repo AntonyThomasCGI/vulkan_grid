@@ -15,7 +15,7 @@
 class Shader
 {
 public:
-    Shader(LogicalDevice &logicalDevice, CommandPool &commandPool, SwapChain &swapChain, std::string vertShader, std::string fragShader);
+    Shader(VkDevice &device, CommandPool &commandPool, SwapChain &swapChain, std::string vertShader, std::string fragShader);
     ~Shader();
 
     void bind(VkCommandBuffer &commandBuffer, uint32_t currentFrame);
@@ -24,8 +24,7 @@ public:
     std::unique_ptr<GraphicsPipeline> graphicsPipeline;
 
 private:
-    LogicalDevice logicalDevice;
-    CommandPool commandPool;
+    VkDevice device;
 
     VkDescriptorSetLayout descriptorSetLayout;
 
@@ -40,6 +39,6 @@ private:
 
     void createDescriptorSets();
     void createDescriptorPool();
-    void createUniformBuffers();
+    void createUniformBuffers(CommandPool &commandPool);
     void createDescriptorSetLayout();
 };
