@@ -31,19 +31,8 @@ VulkanGraphics::~VulkanGraphics()
 
 void VulkanGraphics::createAsset()
 {
-    //TODO, resource manager
-# ifdef /* bad */ __APPLE__
-    std::string vertPath = "/Users/antony/dev/vulkan_grid/shaders/flat_vert.spv";
-    std::string fragPath = "/Users/antony/dev/vulkan_grid/shaders/flat_frag.spv";
-# else
-    std::string vertPath = "C:\\Users\\GGPC\\dev\\vulkan_grid\\shaders\\flat_vert.spv";
-    std::string fragPath = "C:\\Users\\GGPC\\dev\\vulkan_grid\\shaders\\flat_frag.spv";
-# endif
 
-    shader = std::make_unique<Shader>(logicalDevice->getDevice(), *commandPool.get(), *swapChain.get(), vertPath, fragPath);
-
-    square = std::make_unique<Square>(logicalDevice.get());
-    square->createBuffers(*commandPool.get());
+    asset = std::make_unique<GameObject>(*logicalDevice.get(), *commandPool.get(), *swapChain.get());
 
     commandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
     for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
@@ -128,15 +117,10 @@ void VulkanGraphics::update()
 
     commandBuffers[currentFrame]->start();
 
-    /**/
-    shader->bind(commandBuffers[currentFrame]->getCommandBuffer(), currentFrame);
-    /**/
-
-    square->draw(*commandBuffers[currentFrame].get(), *swapChain.get());
+    asset->draw(*commandBuffers[currentFrame].get(), *swapChain.get(), currentFrame);
 
     commandBuffers[currentFrame]->end();
 
-    shader->updateUniformBuffer(currentFrame, *swapChain.get());
 
     commandBuffers[currentFrame]->submit(imageAvailableSemaphores[currentFrame], renderFinishedSemaphores[currentFrame], inFlightFences[currentFrame]);
 

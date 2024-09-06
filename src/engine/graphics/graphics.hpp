@@ -6,6 +6,7 @@
 #include "command_buffer.hpp"
 #include "command_pool.hpp"
 #include "devices/window.hpp"
+#include "game_object.hpp"
 #include "geometry/shapes/square.hpp"
 #include "instance.hpp"
 #include "logical_device.hpp"
@@ -37,8 +38,8 @@ private:
     std::unique_ptr<SwapChain> swapChain;
     std::unique_ptr<CommandPool> commandPool;
 
-    std::unique_ptr<Square> square;
-    std::unique_ptr<Shader> shader;
+    std::unique_ptr<GameObject> asset;
+
     std::vector<std::unique_ptr<CommandBuffer>> commandBuffers;
 
     std::vector<VkSemaphore> imageAvailableSemaphores;

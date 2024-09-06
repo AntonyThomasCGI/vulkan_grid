@@ -77,20 +77,9 @@ void Shader::bind(VkCommandBuffer &commandBuffer, uint32_t currentFrame)
 
 }
 
-void Shader::updateUniformBuffer(uint32_t currentFrame, SwapChain &swapChain)
+void Shader::updateUniformBuffer(glm::mat4 transform, uint32_t currentFrame, SwapChain &swapChain)
 {
-    static auto startTime = std::chrono::high_resolution_clock::now();
-
-    auto currentTime = std::chrono::high_resolution_clock::now();
-    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-
     UniformBufferObject ubo{};
-    glm::mat4 transform{1.0f};
-    //ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-
-    transform = glm::translate(transform, glm::vec3(0.0f, 0.0f, 0.0f));
-    transform = glm::rotate(transform, time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    transform = glm::scale(transform, glm::vec3(100.0f));
 
     ubo.model = transform;
 

@@ -18,6 +18,8 @@ add_library(${LIBRARY_NAME}
     graphics/command_pool.cpp
     graphics/command_pool.hpp
     graphics/constants.hpp
+    graphics/game_object.cpp
+    graphics/game_object.hpp
     graphics/graphics.cpp
     graphics/graphics.hpp
     graphics/instance.cpp

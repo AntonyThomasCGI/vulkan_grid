@@ -6,6 +6,9 @@
 
 #include <vulkan/vulkan.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "command_pool.hpp"
 #include "logical_device.hpp"
 #include "pipeline.hpp"
@@ -19,7 +22,7 @@ public:
     ~Shader();
 
     void bind(VkCommandBuffer &commandBuffer, uint32_t currentFrame);
-    void updateUniformBuffer(uint32_t currentFrame, SwapChain &swapChain);
+    void updateUniformBuffer(glm::mat4 transform, uint32_t currentFrame, SwapChain &swapChain);
 
     std::unique_ptr<GraphicsPipeline> graphicsPipeline;
 
