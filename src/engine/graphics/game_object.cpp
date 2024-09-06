@@ -27,6 +27,13 @@ GameObject::~GameObject()
 }
 
 
+void GameObject::move(glm::vec2 trans, float rot)
+{
+    translate += trans;
+    rotate += rot;
+}
+
+
 void GameObject::draw(CommandBuffer &commandBuffer, SwapChain &swapChain, uint32_t currentFrame)
 {
     shader->bind(commandBuffer.getCommandBuffer(), currentFrame);
@@ -36,13 +43,9 @@ void GameObject::draw(CommandBuffer &commandBuffer, SwapChain &swapChain, uint32
     glm::mat4 transform{1.0f};
     //ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
-    static auto startTime = std::chrono::high_resolution_clock::now();
-
-    auto currentTime = std::chrono::high_resolution_clock::now();
-    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-    transform = glm::translate(transform, glm::vec3(0.0f, 0.0f, 0.0f));
-    transform = glm::rotate(transform, time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    transform = glm::scale(transform, glm::vec3(100.0f));
+    transform = glm::translate(transform, glm::vec3(translate, 0.0f));
+    transform = glm::rotate(transform, rotate, glm::vec3(0.0f, 0.0f, 1.0f));
+    transform = glm::scale(transform, glm::vec3(scale, 1.0f));
 
     shader->updateUniformBuffer(transform, currentFrame, swapChain);
 }

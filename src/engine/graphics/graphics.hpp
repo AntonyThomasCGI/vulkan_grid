@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <memory>
 #include <vector>
 
@@ -25,7 +26,7 @@ public:
     VulkanGraphics(Window &window);
     ~VulkanGraphics();
 
-    void createAsset();
+    GameObject* addGameObject(std::string name);
 
     void update();
 
@@ -38,7 +39,7 @@ private:
     std::unique_ptr<SwapChain> swapChain;
     std::unique_ptr<CommandPool> commandPool;
 
-    std::unique_ptr<GameObject> asset;
+    std::map<std::string, GameObject*> gameObjects;
 
     std::vector<std::unique_ptr<CommandBuffer>> commandBuffers;
 

@@ -12,9 +12,10 @@ public:
 
     void update();
 
+    std::unique_ptr<VulkanGraphics> graphics;
+
 private:
     Window &window;
-    std::unique_ptr<VulkanGraphics> graphics;
 
     rocket::scoped_connection_container connections;
 };

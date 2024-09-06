@@ -21,25 +21,32 @@ VulkanGraphics::VulkanGraphics(Window &window) : window(window)
     logicalDevice = std::make_unique<LogicalDevice>(*instance.get(), *surface.get(), *physicalDevice.get());
     swapChain = std::make_unique<SwapChain>(*surface.get(), *physicalDevice.get(), *logicalDevice.get(), window);
     commandPool = std::make_unique<CommandPool>(*physicalDevice.get(), *logicalDevice.get(), *surface.get());
-}
 
-VulkanGraphics::~VulkanGraphics()
-{
-    cleanupSyncObjects();
-}
-
-
-void VulkanGraphics::createAsset()
-{
-
-    asset = std::make_unique<GameObject>(*logicalDevice.get(), *commandPool.get(), *swapChain.get());
-
+    // hmm, maybe it's ok to use one set of cmd buffers / sync objects for every asset?
     commandBuffers.resize(MAX_FRAMES_IN_FLIGHT);
     for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
         commandBuffers[i] = std::make_unique<CommandBuffer>(*logicalDevice.get(), *commandPool.get());
     }
 
     createSyncObjects();
+}
+
+VulkanGraphics::~VulkanGraphics()
+{
+    cleanupSyncObjects();
+
+    for (auto const& [name, gameObj] : gameObjects) {
+        delete gameObj;
+    }
+}
+
+
+GameObject* VulkanGraphics::addGameObject(std::string name)
+{
+    GameObject *gameObj = new GameObject(*logicalDevice.get(), *commandPool.get(), *swapChain.get());
+    gameObjects[name] = gameObj;
+
+    return gameObjects[name];
 }
 
 
@@ -97,7 +104,6 @@ void VulkanGraphics::onResize() {
 
 void VulkanGraphics::update()
 {
-    std::cout << "graphics::update()" << std::endl;
     vkWaitForFences(logicalDevice->getDevice(), 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
     uint32_t imageIndex;
@@ -117,7 +123,9 @@ void VulkanGraphics::update()
 
     commandBuffers[currentFrame]->start();
 
-    asset->draw(*commandBuffers[currentFrame].get(), *swapChain.get(), currentFrame);
+    for (const auto& [_, gameObj] : gameObjects) {
+        gameObj->draw(*commandBuffers[currentFrame].get(), *swapChain.get(), currentFrame);
+    }
 
     commandBuffers[currentFrame]->end();
 
@@ -141,6 +149,4 @@ void VulkanGraphics::update()
     //**
 
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
-
-    std::cout << "end graphics::update()" << std::endl;
 }

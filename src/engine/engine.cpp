@@ -9,7 +9,6 @@
 Engine::Engine(Window &window) : window(window)
 {
     graphics = std::make_unique<VulkanGraphics>(window);
-    graphics->createAsset();
 }
 
 Engine::~Engine()
