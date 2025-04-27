@@ -52,12 +52,6 @@ public:
 
                 grid[i][j]->translate = glm::vec2(xPos, yPos);
                 grid[i][j]->scale = glm::vec2(tileWidth);
-
-                // Sometimes, set a grid tile a random color.
-                //if (dist10(rng) > 14) {
-                //    glm::vec3 randColor = glm::vec3(glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f), glm::linearRand(0.0f, 1.0f));
-                //    grid[i][j]->color = randColor;
-                //}
             }
         }
     }
@@ -99,6 +93,9 @@ public:
 
     void update(float deltaTime) {
         ant2->move(glm::vec2(0.0f), 200.0f * deltaTime);
+        //std::cout << glm::to_string(ant1->translate) << std::endl;
+        GameObject* square = grid->gameObjectAt(ant1->translate.y, ant1->translate.x);
+
         //std::cout << glm::to_string(ant1->translate) << std::endl;
         GameObject* square = grid->gameObjectAt(ant1->translate.y, ant1->translate.x);
 
